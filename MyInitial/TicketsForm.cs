@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Ticketing
@@ -15,7 +16,7 @@ namespace Ticketing
         int mSection = 2;
         int mQuantity = 0;
         bool mDiscount = false;
-
+        bool mDiscount2 = false;
         public TicketsForm()
         {
             InitializeComponent();
@@ -30,8 +31,29 @@ namespace Ticketing
         {
             mQuantity = int.Parse(txtQuantity.Text);
 
-            if (chkDiscount.Checked)
-                { mDiscount = true; }
+            if (chkDiscount.Checked && childDiscount.Checked)
+            {
+                chkDiscount.Checked = false;
+                childDiscount.Checked = false;
+                mDiscount = false;
+                mDiscount2 = false;
+                return;
+            }
+            else if (chkDiscount.Checked)
+            {
+                mDiscount = true;
+                mDiscount2 = false;
+            }
+            else if (childDiscount.Checked)
+            {
+                mDiscount = false;
+                mDiscount2 = true;
+            }
+            else
+            {
+                mDiscount = false;
+                mDiscount2 = false;
+            }
 
             if (radBalcony.Checked)
                 { mSection = 1; }
@@ -41,10 +63,14 @@ namespace Ticketing
                 { mSection = 3; }
             if (radBack.Checked)
                 { mSection = 4; }
-            mTicketPrice = new TicketPrice(mSection, mQuantity, mDiscount);
-
+            mTicketPrice = new TicketPrice(mSection, mQuantity, mDiscount, mDiscount2);
             mTicketPrice.calculatePrice();
             lblAmount.Text = System.Convert.ToString(mTicketPrice.AmountDue);
         }
-     }
+
+        private Task ShowMessageBox(string v, MessageBoxButtons oK, MessageBoxIcon error)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
